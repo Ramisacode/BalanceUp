@@ -1,18 +1,16 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EmoSpend</title>
+    <title>Balance Up</title>
     <link rel="stylesheet" href="style.css">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-    
+    <!-- Navigation Bar -->
     <nav>
         <div class="nav-logo">Balance Up</div>
         <div>
@@ -23,22 +21,27 @@
         </div>
     </nav>
 
-        
+    <!-- Header Section -->
     <header>
-        <h1>Dont Stress Up, Balance Up</h1>
+        <h1>Don’t Stress Up, Balance Up</h1>
         <p>Track your expenses and emotions together</p>
     </header>
-        
-      <section class="analysis-section">
+
+    <!-- Upload Excel File Section -->
+    <section class="analysis-section">
         <h2>Credit Card Transactions Analysis</h2>
-        <p>Upload your CSV file to analyze your daily spending.</p>
-        
-        <label for="fileInput" class="custom-file-upload">Choose File</label>
-        <input type="file" id="fileInput" accept=".csv" />
+        <form id="upload-form" enctype="multipart/form-data">
+            <label for="fileInput" class="custom-file-upload">Choose File</label>
+            <input type="file" id="fileInput" name="file" accept=".xlsx" />
+            <input type="text" id="firstName" name="first_name" placeholder="First Name" required />
+            <input type="text" id="month" name="month" placeholder="Month" required />
+            <input type="text" id="year" name="year" placeholder="Year" required />
+            <button type="submit">Upload and Analyze</button>
+        </form>
         <canvas id="dailySpendingChart" width="400" height="200"></canvas>
     </section>
 
-    
+    <!-- Summary Section -->
     <section class="summary-section">
         <h2>Summary</h2>
         <div id="summary">
@@ -47,120 +50,75 @@
         </div>
     </section>
 
+    <!-- Suggestions Section -->
     <section class="suggestions-section">
         <h2>Suggestions</h2>
         <p id="suggestion">Log some expenses to see suggestions here.</p>
     </section>
 
-]
+    <!-- Footer -->
     <footer>
-        <p>&copy; 2024 EmoSpend. All rights reserved.</p>
+        <p>&copy; 2024 Balance Up. All rights reserved.</p>
         <p>
             <a href="#">Contact</a> |
             <a href="#">About</a> |
             <a href="#">Instagram</a>
         </p>
     </footer>
-\
+
+    <!-- JavaScript -->
     <script>
-        // Handling CSV File Upload and Analysis
-        document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
-
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (file) {
-                Papa.parse(file, {
-                    header: true,
-                    complete: function(results) {
-                        analyzeTransactions(results.data);
-                    }
-                });
-            }
-        }
-
-        function analyzeTransactions(data) {
-            const dailySpending = {};
-
-            // Assuming the CSV has columns: 'Date' and 'Amount'
-            data.forEach(transaction => {
-                const date = new Date(transaction['Date']).toISOString().split('T')[0]; // Format date as YYYY-MM-DD
-                const amount = parseFloat(transaction['Amount']);
-
-                if (!dailySpending[date]) {
-                    dailySpending[date] = 0;
-                }
-                dailySpending[date] += amount;
-            });
-
-            displayChart(dailySpending);
-        }
-
-        function displayChart(dailySpending) {
-            const labels = Object.keys(dailySpending);
-            const data = Object.values(dailySpending);
-
-            const ctx = document.getElementById('dailySpendingChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Daily Spending',
-                        data: data,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        fill: true,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Date'
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Spending Amount'
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Expense Form Handling
-        document.getElementById('expense-form').addEventListener('submit', function(event) {
+        // Upload Excel File and Analyze
+        document.getElementById('upload-form').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            // Get form values
-            const amount = parseFloat(document.getElementById('amount').value);
-            const mood = document.getElementById('mood').value;
+            const fileInput = document.getElementById('fileInput');
+            const firstName = document.getElementById('firstName').value;
+            const month = document.getElementById('month').value;
+            const year = document.getElementById('year').value;
+            const formData = new FormData();
 
-            // Update total expenses
-            const totalExpensesElem = document.getElementById('total-expenses');
-            let totalExpenses = parseFloat(totalExpensesElem.textContent);
-            totalExpenses += amount;
-            totalExpensesElem.textContent = totalExpenses.toFixed(2);
+            formData.append('file', fileInput.files[0]);
+            formData.append('first_name', firstName);
+            formData.append('month', month);
+            formData.append('year', year);
 
-            // Update emotional spending count
-            if (mood !== 'Neutral') {
-                const emotionCountElem = document.getElementById('emotion-count');
-                let emotionCount = parseInt(emotionCountElem.textContent);
-                emotionCount += 1;
-                emotionCountElem.textContent = emotionCount;
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log(result.message);
+                    // Trigger analysis after upload
+                    analyzeExpenses(firstName, month, year);
+                } else {
+                    console.error('File upload failed.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
             }
-
-            // Clear the form
-            document.getElementById('expense-form').reset();
-
-            // Update suggestions
-            document.getElementById('suggestion').textContent = 'Great job logging your expenses! Keep tracking to see more insights.';
         });
-    </script>
 
+        // Analyze Expenses after Upload
+        async function analyzeExpenses(firstName, month, year) {
+            try {
+                const response = await fetch(`/analyze?first_name=${firstName}&month=${month}&year=${year}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const analysis = await response.text();
+                    document.querySelector('.summary-section').innerHTML = analysis;
+                } else {
+                    console.error('Analysis failed.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
 </body>
 </html>
