@@ -36,7 +36,8 @@
             <input type="text" id="firstName" name="first_name" placeholder="First Name" required />
             <input type="text" id="month" name="month" placeholder="Month" required />
             <input type="text" id="year" name="year" placeholder="Year" required />
-            <button type="submit">Upload and Analyze</button>
+            <button type="button" id="submit-file-button">Submit File</button>
+            <button type="button" id="analyze-button">Analyze</button>
         </form>
         <canvas id="dailySpendingChart" width="400" height="200"></canvas>
     </section>
@@ -68,8 +69,8 @@
 
     <!-- JavaScript -->
     <script>
-        // Upload Excel File and Analyze
-        document.getElementById('upload-form').addEventListener('submit', async function(event) {
+        // Submit File to Backend
+        document.getElementById('submit-file-button').addEventListener('click', async function(event) {
             event.preventDefault();
 
             const fileInput = document.getElementById('fileInput');
@@ -92,20 +93,27 @@
                 if (response.ok) {
                     const result = await response.json();
                     console.log(result.message);
-                    // Trigger analysis after upload
-                    analyzeExpenses(firstName, month, year);
+                    alert('File uploaded successfully.');
                 } else {
                     console.error('File upload failed.');
+                    alert('File upload failed.');
                 }
             } catch (error) {
                 console.error('Error:', error);
+                alert('An error occurred during file upload.');
             }
         });
 
-        // Analyze Expenses after Upload
-        async function analyzeExpenses(firstName, month, year) {
+        // Analyze Uploaded File
+        document.getElementById('analyze-button').addEventListener('click', async function(event) {
+            event.preventDefault();
+
+            const firstName = document.getElementById('firstName').value;
+            const month = document.getElementById('month').value;
+            const year = document.getElementById('year').value;
+
             try {
-                const response = await fetch(`/analyze?first_name=${firstName}&month=${month}&year=${year}`, {
+                const response = await fetch(`http://127.0.0.1:8000/analyze?first_name=${firstName}&month=${month}&year=${year}`, {
                     method: 'POST'
                 });
 
@@ -114,11 +122,13 @@
                     document.querySelector('.summary-section').innerHTML = analysis;
                 } else {
                     console.error('Analysis failed.');
+                    alert('Analysis failed.');
                 }
             } catch (error) {
                 console.error('Error:', error);
+                alert('An error occurred during analysis.');
             }
-        }
+        });
     </script>
 </body>
 </html>
