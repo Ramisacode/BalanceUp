@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Entry - MyWebsite</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">MyWebsite</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="journal.html" class="active">Journal Entry</a></li>
+                <li><a href="analysis.html">Analysis</a></li>
+                <li><a href="resources.html">Resources</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <button class="btn">Login</button>
+                <button class="btn">Register</button>
+            </div>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="content">
+        <section class="journal-entry">
+            <h2>Journal Entry</h2>
+            <p>Use this space to reflect on your day, capture your thoughts, and track your progress.</p>
+            <form>
+                <textarea placeholder="Write your thoughts here..." required></textarea>
+                <button type="submit" class="btn-primary">Save Entry</button>
+            </form>
+            <div class="journal-buttons">
+                <a href="#" class="btn-secondary">Start Your Next Journal Entry</a>
+                <a href="#" class="btn-secondary">Upload Journal Entry Data</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 MyWebsite. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
