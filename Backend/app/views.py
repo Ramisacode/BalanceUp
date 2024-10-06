@@ -47,7 +47,7 @@ async def upload_excel_file(file: UploadFile = File(...), first_name: str = Form
 
 def chat(prompt):
     completion = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {
