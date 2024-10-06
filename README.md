@@ -11,4 +11,4 @@ Analyze journal entries by day
 
 ### 3. Submit a file, and with the same name, month, year, click analyze and wait
 
-![Alt text](./Frontend/gifbalanceup.gif)
+![Alt text](Frontend/GifBalanceUp.gif)
