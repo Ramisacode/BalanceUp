@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmoSpend</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    
+    <nav>
+        <div class="nav-logo">Balance Up</div>
+        <div>
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Features</a>
+            <a href="#">Contact</a>
+        </div>
+    </nav>
+
+        
+    <header>
+        <h1>Dont Stress Up, Balance Up</h1>
+        <p>Track your expenses and emotions together</p>
+    </header>
+        
+      <section class="analysis-section">
+        <h2>Credit Card Transactions Analysis</h2>
+        <p>Upload your CSV file to analyze your daily spending.</p>
+        
+        <label for="fileInput" class="custom-file-upload">Choose File</label>
+        <input type="file" id="fileInput" accept=".csv" />
+        <canvas id="dailySpendingChart" width="400" height="200"></canvas>
+    </section>
+
+    
+    <section class="summary-section">
+        <h2>Summary</h2>
+        <div id="summary">
+            <p>Total Expenses: $<span id="total-expenses">0</span></p>
+            <p>Emotional Spending Count: <span id="emotion-count">0</span></p>
+        </div>
+    </section>
+
+    <section class="suggestions-section">
+        <h2>Suggestions</h2>
+        <p id="suggestion">Log some expenses to see suggestions here.</p>
+    </section>
+
+]
+    <footer>
+        <p>&copy; 2024 EmoSpend. All rights reserved.</p>
+        <p>
+            <a href="#">Contact</a> |
+            <a href="#">About</a> |
+            <a href="#">Instagram</a>
+        </p>
+    </footer>
+\
+    <script>
+        // Handling CSV File Upload and Analysis
+        document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                Papa.parse(file, {
+                    header: true,
+                    complete: function(results) {
+                        analyzeTransactions(results.data);
+                    }
+                });
+            }
+        }
+
+        function analyzeTransactions(data) {
+            const dailySpending = {};
+
+            // Assuming the CSV has columns: 'Date' and 'Amount'
+            data.forEach(transaction => {
+                const date = new Date(transaction['Date']).toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+                const amount = parseFloat(transaction['Amount']);
+
+                if (!dailySpending[date]) {
+                    dailySpending[date] = 0;
+                }
+                dailySpending[date] += amount;
+            });
+
+            displayChart(dailySpending);
+        }
+
+        function displayChart(dailySpending) {
+            const labels = Object.keys(dailySpending);
+            const data = Object.values(dailySpending);
+
+            const ctx = document.getElementById('dailySpendingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Daily Spending',
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Spending Amount'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Expense Form Handling
+        document.getElementById('expense-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get form values
+            const amount = parseFloat(document.getElementById('amount').value);
+            const mood = document.getElementById('mood').value;
+
+            // Update total expenses
+            const totalExpensesElem = document.getElementById('total-expenses');
+            let totalExpenses = parseFloat(totalExpensesElem.textContent);
+            totalExpenses += amount;
+            totalExpensesElem.textContent = totalExpenses.toFixed(2);
+
+            // Update emotional spending count
+            if (mood !== 'Neutral') {
+                const emotionCountElem = document.getElementById('emotion-count');
+                let emotionCount = parseInt(emotionCountElem.textContent);
+                emotionCount += 1;
+                emotionCountElem.textContent = emotionCount;
+            }
+
+            // Clear the form
+            document.getElementById('expense-form').reset();
+
+            // Update suggestions
+            document.getElementById('suggestion').textContent = 'Great job logging your expenses! Keep tracking to see more insights.';
+        });
+    </script>
+
+</body>
+</html>
