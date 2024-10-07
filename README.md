@@ -8,7 +8,7 @@ BalanceUp is a website designed to help user's better understand the relationshi
 ### 1. Start the backend. 
 - Go to the backend folder and see README
 
-### 2. Open index.html in a web browser(The one inside the Frontend folder)
+### 2. Open index.html(The one inside the Frontend folder) in a web browser
 
 ## To Use
 1. User will first upload a excel file onto the website and input their first name, month of transactions, and year of transactions. Then click submit. This is so the server can download the excel file.
