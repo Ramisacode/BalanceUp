@@ -1,0 +1,167 @@
+/* Reset some default browser styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f8f8;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Navigation bar */
+nav {
+    background-color: #000;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+}
+
+nav a:hover {
+    color: #b777ff;
+}
+
+.nav-logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Header section */
+header {
+    background-image: url('background_waterdrop.avif');
+    background-size: cover;
+    background-position: center;
+    color: rgb(249, 242, 255);
+    text-align: left;
+    padding: 100px 50px;
+    border-radius: 10px;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+header p {
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+header button {
+    background-color: #6d79ff;
+    color: black;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+header button:hover {
+    background-color: #85a2ff;
+}
+
+/* Section styling */
+section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    text-align: center;
+}
+
+/* Styling for the analysis section */
+.analysis-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 50px;
+    margin: 0 auto;
+}
+
+/* Custom button styling */
+.custom-file-upload {
+    background-color: #865eff;
+    color: black;
+    border: none;
+    padding: 20px 40px;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.custom-file-upload:hover {
+    background-color: #bf8aff;
+}
+
+/* Hide the default file input */
+#fileInput {
+    display: none;
+}
+
+/* Footer styling */
+footer {
+    background-color: #000;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+footer a {
+    color: #83d2ff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer a:hover {
+    color: #8664ff;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    header {
+        padding: 50px 20px;
+    }
+
+    header h1 {
+        font-size: 36px;
+    }
+
+    header p {
+        font-size: 18px;
+    }
+
+    section {
+        flex-direction: column;
+    }
+
+    /* Adjust the analysis section on smaller screens */
+    .custom-file-upload {
+        padding: 15px 30px;
+        font-size: 18px;
+    }
+}
