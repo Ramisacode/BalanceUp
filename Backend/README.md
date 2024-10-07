@@ -1,8 +1,10 @@
 ## How to run
 
-### Step 0. Create key.json file in root directory, and contents should be the openapi key
+### Step 0. Create key.json file in root directory, and contents should be the Segment API key
+
+#### Segmind (https://www.segmind.com/) is the platform that lets us access OPENAI's o1-preview model
 ```
-{"key": "OPENAI Key"}
+{"key": "Segmind API Key"}
 ```
 
 ### Pip install any package you need, then run below command
