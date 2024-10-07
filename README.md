@@ -7,7 +7,7 @@ Analyze journal entries by day
 ### 1. Start the backend. 
 - Go to the backend folder and see README
 
-### 2. Start frontend, index.html
+### 2. Start frontend, index.html (The one inside the Frontend folder)
 
 ### 3. Submit a file, and with the same name, month, year, click analyze and wait
 
