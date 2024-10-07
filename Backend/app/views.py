@@ -5,15 +5,12 @@ from fastapi.responses import HTMLResponse
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from app import app
-from openai import OpenAI
 import json
 from openpyxl import load_workbook
-
+import requests
 
 f = open('key.json')
 key = json.load(f)["key"]
-client = OpenAI(api_key=key)
-
 
 @app.get("/")
 async def root() -> JSONResponse:
@@ -46,24 +43,37 @@ async def upload_excel_file(file: UploadFile = File(...), first_name: str = Form
 
 
 def chat(prompt):
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant."},
-            {
-                "role": "user",
-                "content": prompt
-            }
+    api_key = key
+    url = "https://api.segmind.com/v1/o1-preview"
+    
+    # Define the message data
+    data = {
+        "messages": [
+            {"role": "user", "content": prompt}
         ]
-    )
+    }
+    
+    headers = {
+        'x-api-key': api_key
+    }
+    
+    try:
+        # Send a POST request to the API
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()
+        # Extract the assistant's response from the API response
+        result = response.json()
+        return result["choices"][0]["message"]["content"]
+        # return result['messages'][-1]['content']  # Returns the latest assistant's response
+    except requests.exceptions.RequestException as e:
+        return f"Error: {e}"
 
-    return str(completion.choices[0].message.content)
 @app.post("/analyze")
 async def analyze(first_name, month, year):
     name = "data/" + first_name + "_" + month + "_" + year + ".xlsx"
  
     analysis = "<h2>Feelings and Analysis:</h2>"
-    print("we analyze and got this: " + chat("how much money do you charge?"))
+    # print("we analyze and got this: " + chat("how much money do you charge?"))
 
     results = loadExcelFN(name)
     print("We loaded excel: " + str(results))
